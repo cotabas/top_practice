@@ -1,15 +1,12 @@
-def merge_sort(array, left = [], right = [])
+def merge_sort(array)
   # Why is the assignment branch condition size for merge_sort too high?
-  
+
   return [array[0]] if array.size == 1
 
   left_side = array.slice(0, (array.size.odd? ? (array.size + 1) / 2 : array.size / 2))
   right_side = array.slice(-(array.size - left_side.size), (array.size - left_side.size))
 
-  left = merge_sort(left_side, left, right)
-  right = merge_sort(right_side, left, right)
-
-  merge(left, right)
+  merge(merge_sort(left_side), merge_sort(right_side))
 end
 
 def merge(left, right, answer = [])
