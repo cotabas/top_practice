@@ -67,6 +67,16 @@ class LinkedList
     at(dex - 1).next_node = at(dex + 1)
   end
 
+  def to_s
+    count = 0
+    holding = ''
+    until count == size
+      holding << "#{at(count).value} -> "
+      count += 1
+    end
+    puts holding << 'nil'
+  end
+
   def each
     count = 0
     until count == size
@@ -88,7 +98,7 @@ class Node
   attr_accessor :value, :next_node
 
   def initialize(val = nil, next_node = nil)
-    @value = val.to_s
+    @value = val
     @next_node = next_node
   end
 
@@ -121,6 +131,9 @@ p linked_list.head_node
 p linked_list.head_node
 p linked_list.tail
 
+linked_list.to_s
+
+# cool...
 linked_list.each do |val|
   p val
 end
