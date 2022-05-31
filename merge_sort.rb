@@ -20,6 +20,6 @@ def merge(left, right, answer = [])
   answer.flatten
 end
 
-test_array = [2,9,1,7,6,29,456,457,5,4,2,4,6,5,7,23,24,25,26,21,20]
-p "Before: #{test_array}"
-p "After: #{merge_sort(test_array)}"
+# test_array = [2,9,1,7,6,29,456,457,5,4,2,4,6,5,7,23,24,25,26,21,20]
+# p "Before: #{test_array}"
+# p "After: #{merge_sort(test_array)}"
