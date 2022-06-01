@@ -38,21 +38,46 @@ class BinarySearchTree
     root
   end
 
-  def delete(value, root = @root)
-    local = find(value)
-    
+  def delete(value)
+    local, parent = find(value)
+    if local.left.nil? && local.right.nil?
+      parent.left = nil if parent.left == local
+      parent.right = nil if parent.right == local
+    elsif local.left.nil?
+      parent.right = local.right if parent.right == local
+      parent.left = local.right if parent.left == local
+    elsif local.right.nil?
+      parent.right = local.left if parent.right == local
+      parent.left = local.left if parent.left == local
+    else
+      
+      # make traversal methods first
+    end
+
   end
 
-  def find(value, root = @root)
+  def find(value, root = @root, parent = nil)
     if root.value == value
-      root
+      [root, parent]
     elsif root.value > value
-      find(value, root.left)
+      find(value, root.left, root)
     elsif root.value < value
-      find(value, root.right)
+      find(value, root.right, root)
     end rescue "Value doesn\'t exsist in the tree" 
     # rails #try seems cool, I would use it here..
   end
+
+  def level_order(node = @root, que = [node], ordered = [])
+    
+    working = que.shift
+    ordered << working.value
+    que << working.left unless working.left.nil?
+    que << working.right unless working.right.nil?
+    level_order(working, que, ordered) unless que.size == 1
+    ordered
+
+  end
+
 
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
@@ -67,4 +92,9 @@ test = BinarySearchTree.new([10,20,30,40,50,60,70,80,90,100])
 test.pretty_print
 test.insert(9)
 test.pretty_print
-p test.find(109)
+ro, par = test.find(10)
+p ro.value
+p par.value
+test.delete(90)
+test.pretty_print
+p test.level_order
