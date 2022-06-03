@@ -19,6 +19,7 @@ class Node
   end
 end
 
+# Tree edit features, which you could probably decern from the module name.. rubocop
 module Edit
   def insert(value, root = @root)
     if root.value > value
@@ -55,6 +56,7 @@ module Edit
   end
 end
 
+# Depth first traversal methods
 module DepthFirst
   def inorder(node = @root, array = [], &block)
     return array if node.nil?
@@ -84,6 +86,7 @@ module DepthFirst
   end
 end
 
+# Takes an array and turns it into a binary search tree
 class BinarySearchTree
   include Edit
   include DepthFirst
@@ -106,16 +109,17 @@ class BinarySearchTree
     new_node
   end
 
+  # Returns two values: a node and a parent
   def find(value, root = @root, parent = nil)
-    # Returns two values: a node and a parent
+    return "Value doesn\'t exsist in the tree" if root.nil?
+
     if root.value == value
       [root, parent]
     elsif root.value > value
       find(value, root.left, root)
     elsif root.value < value
       find(value, root.right, root)
-    end rescue "Value doesn\'t exsist in the tree" 
-    # rails #try seems cool, I would use it here..
+    end
   end
 
   # Breadth first
@@ -132,7 +136,7 @@ class BinarySearchTree
     # Just saw this.. working on this project over multiple days..
     # I couldn't pass the integer because I wasn't returning the integer in every case!
     return count if node.nil?
-    # hmm this maybe doesn't work right
+
     height(node.left, count + 1)
     height(node.right, count + 1)
   end
@@ -153,8 +157,6 @@ class BinarySearchTree
     end
     count.length - 1
   end
-
-  
 
   def balanced?(node = @root)
     # This can't be the best way to do this.. I'm not sure why I couldn't pass the boolean recursively
