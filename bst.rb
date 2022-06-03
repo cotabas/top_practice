@@ -1,3 +1,12 @@
+# In the unlikely senario that someone is reading this;
+# there's a driver_script.rb in this folder which showcases the assignment
+# I also used my merge sort project but Array.sort would probably be better
+# also also I didn't filter unique values.. because why? Array.uniq if I think of a reason
+# also also also the rubocop hate is strong with this one. Mostly because of complexity and branch conditions
+# Looking at other's solutions, I could've been more efficient by filtering the value more often
+# cutting the part of the tree in half as it works.. the time complexity is high..
+# oh! that's probably how I could fix all the linter issues
+
 require_relative 'merge_sort'
 # The object for the leaves and branches of this tree
 class Node
@@ -10,31 +19,15 @@ class Node
   end
 end
 
-class BinarySearchTree
-  attr_accessor :root
-
-  def initialize(array)
-    @array = merge_sort(array)
-    @root = build_tree(@array)
-  end
-
-  def build_tree(array, head = 0, tail = array.size - 1)
-    return nil if head > tail
-
-    middle = (head + tail) / 2
-    new_node = Node.new(array[middle])
-    new_node.left = build_tree(array, head, middle - 1)
-    new_node.right = build_tree(array, middle + 1, tail)
-
-    new_node
-  end
-
+module Edit
   def insert(value, root = @root)
-    root.left = Node.new(value) if root.left.nil? && root.value > value
-    root.right = Node.new(value) if root.right.nil? && root.value < value
-
-    insert(value, root.left) if root.value > value
-    insert(value, root.right) if root.value < value
+    if root.value > value
+      root.left = Node.new(value) if root.left.nil?
+      insert(value, root.left)
+    elsif root.value < value
+      root.right = Node.new(value) if root.right.nil?
+      insert(value, root.right)
+    end
     root
   end
 
@@ -60,30 +53,9 @@ class BinarySearchTree
       local.value = succ_local[0].value
     end
   end
+end
 
-
-  def find(value, root = @root, parent = nil)
-    if root.value == value
-      [root, parent]
-    elsif root.value > value
-      find(value, root.left, root)
-    elsif root.value < value
-      find(value, root.right, root)
-    end rescue "Value doesn\'t exsist in the tree" 
-    # rails #try seems cool, I would use it here..
-  end
-
-  # Breadth first
-  def level_order(node = @root, que = [node], ordered = [])
-    working = que.shift
-    ordered << working.value
-    que << working.left unless working.left.nil?
-    que << working.right unless working.right.nil?
-    level_order(working, que, ordered) unless que.size == 0
-    ordered
-  end
-
-  # Depth first
+module DepthFirst
   def inorder(node = @root, array = [], &block)
     return array if node.nil?
 
@@ -110,25 +82,97 @@ class BinarySearchTree
     yield node.value if block_given?
     array << node.value
   end
+end
+
+class BinarySearchTree
+  include Edit
+  include DepthFirst
+  attr_accessor :root, :is_balanced
+
+  def initialize(array)
+    @array = merge_sort(array)
+    @root = build_tree(@array)
+    @is_balanced = true
+  end
+
+  def build_tree(array, head = 0, tail = array.size - 1)
+    return nil if head > tail
+
+    middle = (head + tail) / 2
+    new_node = Node.new(array[middle])
+    new_node.left = build_tree(array, head, middle - 1)
+    new_node.right = build_tree(array, middle + 1, tail)
+
+    new_node
+  end
+
+  def find(value, root = @root, parent = nil)
+    # Returns two values: a node and a parent
+    if root.value == value
+      [root, parent]
+    elsif root.value > value
+      find(value, root.left, root)
+    elsif root.value < value
+      find(value, root.right, root)
+    end rescue "Value doesn\'t exsist in the tree" 
+    # rails #try seems cool, I would use it here..
+  end
+
+  # Breadth first
+  def level_order(node = @root, que = [node], ordered = [])
+    working = que.shift
+    ordered << working.value
+    que << working.left unless working.left.nil?
+    que << working.right unless working.right.nil?
+    level_order(working, que, ordered) unless que.size == 0
+    ordered
+  end
 
   def height(node = @root, count = 0)
+    # Just saw this.. working on this project over multiple days..
+    # I couldn't pass the integer because I wasn't returning the integer in every case!
     return count if node.nil?
-
+    # hmm this maybe doesn't work right
     height(node.left, count + 1)
     height(node.right, count + 1)
   end
 
-  def depth(node, count = 0)
+  def depth(original_node, node = @root, count = [])
+    # well here is a different way to carry a count recursively
+    # I don't understand why I can't increment an integer..
+    original_node = find(original_node)[0] if original_node.is_a? Integer
+    # Pass either a node or a value
+    return if node.nil?
 
+    if original_node.value <= node.value
+      count << 'why does is carry an array'
+      depth(original_node, node.left, count) unless node == original_node
+    else
+      count << 'but it wont carry and integer'
+      depth(original_node, node.right, count) unless node == original_node
+    end
+    count.length - 1
   end
 
-  def balanced?(node = @root, is_balanced = true)
-    return true if node.nil?
+  
 
-    # return false if height(node.left) + 1 > height(node.right)
+  def balanced?(node = @root)
+    # This can't be the best way to do this.. I'm not sure why I couldn't pass the boolean recursively
+    # Having a class variable was the only thing I could figure out..
+    @is_balanced = true
+    return if node.nil?
 
-    balanced?(node.left)
-    balanced?(node.right)
+    unless node.left.nil? && node.right.nil?
+      if node.left.nil?
+        @is_balanced = false unless node.right.right.nil? && node.right.left.nil?
+      elsif node.right.nil?
+        @is_balanced = false unless node.left.left.nil? && node.left.right.nil?
+      end
+    end
+    balanced?(node.left) if @is_balanced
+    balanced?(node.right) if @is_balanced
+    @is_balanced
+
   end
 
   def reblance
@@ -142,37 +186,42 @@ class BinarySearchTree
   end
 end
 
-test = BinarySearchTree.new([10,20,30,40,50,60,70,80,90,100,4,3,2,5,6,7,8,7,5,4,3,2])
+# test = BinarySearchTree.new([10,20,30,40,50,60,70,80,90,100,4,3,2,5,6,7,8,7,5,4,3,2])
 
-test.pretty_print
-test.insert(9)
-test.pretty_print
-ro, par = test.find(10)
-p ro.value
-p par.value
-test.delete(20)
-test.delete(50)
-test.delete(3)
-test.pretty_print
-# p test.level_order
-# p test.inorder
+# test.pretty_print
+# test.insert(9)
+# test.pretty_print
 
-# test.inorder do |val|
-#   p val
-# end
-# p test.preorder
-# test.preorder do |val|
-#   p val
-# end
-# p test.postorder
-# test.postorder do |val|
-#   p val
-# end
+# test.delete(20)
+# test.delete(50)
+# test.delete(3)
+# test.pretty_print
+# # p test.level_order
+# # p test.inorder
 
-p test.height
+# # test.inorder do |val|
+# #   p val
+# # end
+# # p test.preorder
+# # test.preorder do |val|
+# #   p val
+# # end
+# # p test.postorder
+# # test.postorder do |val|
+# #   p val
+# # end
 
-test.reblance
+# p test.height
+# p test.balanced?
 
-test.pretty_print
+# test.reblance
 
-p test.balanced?
+# test.pretty_print
+# p test.height
+# p test.is_balanced
+# p test.balanced?
+# ro, par = test.find(10)
+# p ro.value
+# p par.value
+# p test.depth(ro)
+# p test.depth(100)
