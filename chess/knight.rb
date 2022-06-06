@@ -18,6 +18,7 @@ class Knight
   def initialize
     @moves = [1, 2, -1, -2].permutation(2).to_a
     @node_list = []
+    @visited = []
     8.times do |x_cord|
       8.times do |y_cord|
         @node_list << Node.new([x_cord, y_cord])
@@ -42,18 +43,45 @@ class Knight
   end
 
   def knight_moves(start, target)
-
+    answer = []
+    final_answer = []
+    answer_size = 99
+    breadth_first(find(start), find(target)) do |node|
+      
+      node.each do |nod|
+        answer << nod.vertex
+      end
+      if answer_size > answer.size && answer.size > 0
+        final_answer = answer
+        answer_size = answer.size
+        answer = []
+      end
+      # p final_answer
+      # @visited.each do |set|
+      #   p "#{set[0]} at #{set[1].vertex}"
+      # end
+    end
+    final_answer
   end
 
   # A breadth first traversal of the graph.. doesn't provide any value..
-  def breadth_first(start = @start, que = [start], nodes = [])
+  def breadth_first(start, target, work = start, que = [work], nodes = [], &block)
+    return nodes if que.size.zero?
     working = que.shift
     working.edges.each do |node|
-      que << node unless nodes.include?(node) || que.include?(node)
+      # p "#{nodes.size + 1} + #{node.vertex}"
+      que << node unless @visited.include?([nodes.size + 1, node])
     end
     nodes << working
-    breadth_first(working, que, nodes) unless que.size.zero?
-    nodes
+    if nodes[-1] == target
+      nodes.each_with_index do |val, dex|
+        @visited << [dex, val] unless val == start
+      end
+      que = [start]
+      yield nodes
+      nodes = []
+    end
+    breadth_first(start, target, working, que, nodes, &block)
   end
 
   # Add valid moves
@@ -68,5 +96,7 @@ end
 test = Knight.new
 
 p test.add_moves([6,5])
-p test.breadth_first.size
 p test.node_list.size
+p test.knight_moves([0, 0], [3, 3])
+p test.knight_moves([3, 3], [4, 3])
+
