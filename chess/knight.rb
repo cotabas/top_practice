@@ -16,7 +16,7 @@ class Knight
   attr_accessor :start, :node_list
 
   def initialize
-    @moves = [1, 2, -1, -2].permutation(2).to_a
+    @moves = [[1, 2], [-1, 2], [2, 1], [-2, 1], [1, -2], [-1, -2], [2, -1], [-2, -1]]
     @node_list = []
     @visited = []
     8.times do |x_cord|
@@ -129,7 +129,7 @@ class Knight
   #   working_node = find(start)
   #   depth = 1
   #   progress_check = 0
-  #   target_dex = target_index(target)
+  #   target_dex = index(target)
   #   answer = []
   #   final_answer = [1,1,1,1,1,1,1,1,1,1,1,1,1,11,1,1,1,1]
   #   64.times do |dex|
@@ -167,12 +167,11 @@ class Knight
     que = []
     working_list = []
     begining = index(start)
-    ending = index(target)
     64.times do |dex|
       working_list << nil
-      distances << Float::INFINITY
-      path << nil
-      que << dex
+      distances << []
+      path << [1,1,1,1,1,1,1,1,1,1,1,1,1]
+      # que << dex
     end
 
     @node_list.each_with_index do |node, dex| 
@@ -183,19 +182,27 @@ class Knight
       end
     end
 
-    distances[0] = 0
+    distances[0] = []
+    answer = []
+    final_answer = [1,1,1,1,1,1,1,1,1,1,1]
+    que = [0]
 
-    final_path = []
-
-
-    until que.size.zero?
+    164.times do
       queue = que.shift
+
+      # p working_list[queue].vertex
       working_list[queue].edges.each do |edge|
         working_list.each_with_index do |node, dex|
           if edge == node
-            if distances[dex] > 1 + queue
-              path[dex] = queue
-              distances[dex] = 1 + queue
+            que << dex
+            if distances[queue] = []
+              distances[dex] << working_list[queue].vertex 
+            else
+              distances[dex] = distances[queue]
+            end
+            if node.vertex == target
+              final_answer << distances[dex] << node.vertex
+              distances[dex] = []
             end
           end
         end
@@ -207,10 +214,12 @@ class Knight
     # end
         
 
-    p distances
+    # p distances
+    distances.each_with_index do |ver, dex|
+      p "#{dex} #{working_list[dex].vertex} Path: #{ver}"
+    end
 
-    p path
-
+    p  final_answer
 
   end
 
@@ -224,12 +233,12 @@ end
 
 test = Knight.new
 
-p test.add_moves([3,5])
+p test.add_moves([3,3])
 p test.node_list.size
 # p test.knight_moves([0, 0], [3, 3])
 # p test.knight_moves([3, 3], [4, 3])
-
 test.dijkstra([3, 3], [4, 3])
+# test.dijkstra([0, 0], [3, 3])
 
 
 # ok, the moves for [0, 0] and all one distance away
