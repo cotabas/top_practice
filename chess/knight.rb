@@ -1,5 +1,5 @@
-# yeah
-
+# This was tough, and maybe not the best way to do it, certainly someparts could be improved
+# However I learned a lot and became comfortable with some concepts that I already understood
 
 # Each node is a vertex on a graph of possible moves
 class Node
@@ -18,7 +18,7 @@ class Knight
   def initialize
     @moves = [[1, 2], [-1, 2], [2, 1], [-2, 1], [1, -2], [-1, -2], [2, -1], [-2, -1]]
     @node_list = []
-    @visited = []
+    @long_array = Array.new(1000)
     8.times do |x_cord|
       8.times do |y_cord|
         @node_list << Node.new([x_cord, y_cord])
@@ -42,49 +42,6 @@ class Knight
     @node_list.each { |node| return node if node.vertex == vertex }
   end
 
-  # def knight_moves(start, target)
-  #   answer = []
-  #   final_answer = []
-  #   answer_size = 99
-  #   breadth_first(find(start), find(target)) do |node|
-      
-  #     node.each do |nod|
-  #       answer << nod.vertex
-  #     end
-  #     if answer_size > answer.size && answer.size > 0
-  #       final_answer = answer
-  #       answer_size = answer.size
-  #       answer = []
-  #     end
-  #     # p final_answer
-  #     # @visited.each do |set|
-  #     #   p "#{set[0]} at #{set[1].vertex}"
-  #     # end
-  #   end
-  #   final_answer
-  # end
-
-  # A breadth first traversal of the graph.. doesn't provide any value..
-
-  # def breadth_first(start, target, work = start, que = [work], nodes = [], &block)
-  #   return nodes if que.size.zero?
-  #   working = que.shift
-  #   working.edges.each do |node|
-  #     # p "#{nodes.size + 1} + #{node.vertex}"
-  #     que << node unless @visited.include?([nodes.size + 1, node])
-  #   end
-  #   nodes << working
-  #   if nodes[-1] == target
-  #     nodes.each_with_index do |val, dex|
-  #       @visited << [dex, val] unless val == start
-  #     end
-  #     que = [start]
-  #     yield nodes
-  #     nodes = []
-  #   end
-  #   breadth_first(start, target, working, que, nodes, &block)
-  # end
-
   # Add valid moves
   def add_moves(start, return_array = [])
     @moves.each do |set|
@@ -93,134 +50,52 @@ class Knight
     return_array.select { |set| set[0].between?(0, 7) && set[1].between?(0, 7) }
   end
 
-  # def knight_moves(start, target)
-  #   answer = []
-  #   final_answer = []
-  #   starting_size = 999
-  #   breadth_first(find(start), find(target)) do |path|
-  #     path.each { |node| answer << node.vertex }
-  #     if starting_size > answer.size
-  #       final_answer = answer 
-  #       starting_size = answer.size
-  #     end
-  #     answer = []
-  #   end
-  #   final_answer
-  # end
-
-  # def breadth_first(start, target, nodes = [], &block)
-  #   nodes << start
-  #   return nodes if start == target
-  #   # if start == target
-  #   #   yield nodes
-  #   # end
-  #   start.edges.each do |node|
-  #     return nodes if node == target
-  #     breadth_first(node, target, nodes, &block) unless node == target
-  #   end
-  #   nodes
-  # end
-
-  # def dijkstra(start, target)
-  #   distances = []
-  #   que = []
-  #   working_list = []
-  #   @node_list.each { |node| working_list << node }
-  #   working_node = find(start)
-  #   depth = 1
-  #   progress_check = 0
-  #   target_dex = index(target)
-  #   answer = []
-  #   final_answer = [1,1,1,1,1,1,1,1,1,1,1,1,1,11,1,1,1,1]
-  #   64.times do |dex|
-  #     distances << Float::INFINITY
-  #   end
-  #   distances[0] = 0
-    
-  #   until progress_check == distances.sum && progress_check != Float::INFINITY
-  #     progress_check = distances.sum
-  #     working_node.edges.each do |edges|
-  #       working_list.each_with_index do |node, dex|
-  #         if edges == node
-  #           answer << @node_list[dex].vertex
-  #           if dex == target_dex
-  #             final_answer = answer unless final_answer.size < answer.size
-  #             answer = []
-  #           end
-  #           distances[dex] = depth unless distances[dex] < depth
-  #           que << node
-  #         end
-  #       end
-  #     end
-  #     depth += 1
-  #     working_node = que.shift
-  #   end
-  #   # distances.each_with_index do |dist, dex|
-  #   #   p "at: #{@node_list[dex].vertex} dist: #{dist}"
-  #   # end
-  #   p final_answer
-  # end
-
-  def dijkstra(start, target)
-    distances = []
-    path = []
-    que = []
-    working_list = []
+  # Creates a list of the verticies with the start at zero index
+  def create_working_list(start, working_list = Array.new(64))
     begining = index(start)
-    64.times do |dex|
-      working_list << nil
-      distances << []
-      path << [1,1,1,1,1,1,1,1,1,1,1,1,1]
-      # que << dex
-    end
-
-    @node_list.each_with_index do |node, dex| 
+    @node_list.each_with_index do |node, dex|
       if dex < begining
         working_list[dex + (working_list.size - begining)] = node
       else
         working_list[[(dex - begining), 0].max] = node
       end
     end
+    working_list
+  end
 
-    distances[0] = []
-    answer = []
-    final_answer = [1,1,1,1,1,1,1,1,1,1,1]
-    que = [0]
+  def dijkstra_ish(start, target, que = [0], shortest_path = @long_array)
+    distances = Array.new(64, @long_array)
+    working_list = create_working_list(start)
 
-    164.times do
+    # There's is definitely a better way to do this
+    1000.times do
       queue = que.shift
-
-      # p working_list[queue].vertex
       working_list[queue].edges.each do |edge|
         working_list.each_with_index do |node, dex|
-          if edge == node
+          next unless edge == node
+
             que << dex
-            if distances[queue] = []
-              distances[dex] << working_list[queue].vertex 
-            else
-              distances[dex] = distances[queue]
-            end
-            if node.vertex == target
-              final_answer << distances[dex] << node.vertex
+            distances[dex] = distances[queue] == @long_array ? working_list[queue].vertex : distances[queue] + working_list[queue].vertex
+            if node.vertex == target && [distances[dex][0], distances[dex][1]] == start
+              shortest_path = distances[dex] + target if shortest_path.size > (distances[dex].size + 2)
               distances[dex] = []
             end
-          end
         end
       end
     end
+    shortest_path
+  end
 
-    # distances.each_with_index do |dist, dex|
-    #   p "at: #{@working_list[dex].vertex} dist: #{dist}"
-    # end
-        
+  def knight_moves(start, target)
+    path = dijkstra_ish(start, target)
+    puts "Moving from #{start} to #{target} takes #{(path.size / 2) - 1} moves"
+    puts "[#{path.shift}, #{path.shift}]" until path.size.zero?
+  end
 
-    # p distances
+  def print_paths(distances, working_list)
     distances.each_with_index do |ver, dex|
       p "#{dex} #{working_list[dex].vertex} Path: #{ver}"
     end
-
-    p  final_answer
-
   end
 
   def index(node)
@@ -228,19 +103,18 @@ class Knight
       return dex if find(node) == nod
     end
   end
-
 end
 
 test = Knight.new
 
-p test.add_moves([3,3])
-p test.node_list.size
-# p test.knight_moves([0, 0], [3, 3])
-# p test.knight_moves([3, 3], [4, 3])
-test.dijkstra([3, 3], [4, 3])
-# test.dijkstra([0, 0], [3, 3])
+# # TEST BLOCK # #
 
+# p test.add_moves([5, 0])
+# p test.node_list.size
+test.knight_moves([0, 0], [3, 3])
+test.knight_moves([3, 3], [4, 3])
+# test.dijkstra_ish([3, 3], [4, 3])
+# test.dijkstra_ish([0, 0], [3, 3])
+# test.dijkstra_ish([3, 3], [0, 0])
+# test.dijkstra_ish([5, 0], [7, 7])
 
-# ok, the moves for [0, 0] and all one distance away
-# then those moves are one distance from their moves
-#  so those moves would be 2 away from [0, 0]
