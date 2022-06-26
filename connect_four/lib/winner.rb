@@ -1,7 +1,9 @@
 module Winner
 
   def winner?(board_state, player)
-    return player if check_horizontal(board_state, player) || check_vertical(board_state, player) || check_diagonal(board_state, player)
+    return player if check_horizontal(board_state, player) || check_vertical(board_state, player)
+   # || check_diagonal(board_state, player)
+    false
   end
 
   def check_horizontal(board_state, player)

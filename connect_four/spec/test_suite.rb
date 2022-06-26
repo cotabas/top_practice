@@ -1,7 +1,11 @@
 require_relative '../lib/connect_four'
 
 def make_board
-  Array.new(6, Array.new(7, nil))
+  board = Array.new(6, nil)
+  6.times do |i|
+    board[i] = Array.new(7, nil)
+  end 
+  board
 end
 
 describe Board do
@@ -31,6 +35,7 @@ describe Board do
       it 'four not in a row on the bottom' do 
         board_state = make_board
         board_state[0] = ['x', nil, 'x', nil, 'x', 'x', nil]
+        p board_state
         expect(game.winner?(board_state, 'x')).not_to eq('x')
       end
     end
@@ -44,14 +49,25 @@ describe Board do
         board_state[4][start] = 'x'
         expect(game.winner?(board_state, 'x')).to eq('x')
       end
-      xit 'four but not in a row' do
+      it 'four but not in a row' do
         board_state = make_board
         board_state[1][1] = 'x'
         board_state[2][1] = 'x'
         board_state[3][1] = 'x'
-        board_state[4][1] = 'x'
+        board_state[5][1] = 'x'
         expect(game.winner?(board_state, 'x')).not_to eq('x')
       end
     end
   end
+  describe '#add_move' do
+    subject(:game) { described_class.new }
+    context 'check if a random move is added' do
+      it 'random x move' do
+        board_state = make_board
+        move = rand (0..5)
+        expect(game.add_move('x', move)).to eq(game.board)
+      end
+    end
+  end
+
 end
