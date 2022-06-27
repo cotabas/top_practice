@@ -1,8 +1,7 @@
 module Winner
 
   def winner?(board_state, player)
-    return player if check_horizontal(board_state, player) || check_vertical(board_state, player)
-   # || check_diagonal(board_state, player)
+    return player if check_horizontal(board_state, player) || check_vertical(board_state, player) || check_diagonal(board_state, player)
     false
   end
 
@@ -46,5 +45,6 @@ module Winner
        return true if count == 4
       end
     end
+    false
   end
 end

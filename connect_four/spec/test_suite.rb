@@ -39,6 +39,13 @@ describe Board do
         expect(game.winner?(board_state, 'x')).not_to eq('x')
       end
     end
+    context 'check #check_diaganol' do
+      it 'return false on an empty board' do
+        board_state = make_board
+        expect(game.check_diagonal(board_state, 'x')).to eq(false)
+      end
+    end
+
     context 'check for vertical wimmers' do
       it 'random vertical winner' do
         board_state = make_board
