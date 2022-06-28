@@ -2,6 +2,7 @@
 This is all of the projects and bits of code I've created while going through the Odin project
 
 **Command line highlights:** 
+
 find the shortest path a chess knight piece can take from one posistion to another using a graph and depth first traversal
 
 a connect four game with a testing suite
