@@ -1,4 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500&display=swap');
+:root {
+  --img_filt: sepia();
+  --brwn: rgb(43, 31, 1);
+  --lght: rgb(139, 132, 115);
+}
 body {
   margin: 0;
   font-family: 'Nunito', sans-serif;
@@ -11,9 +16,14 @@ img {
   left: 0;
   height: 100vh;
   width: 100%;
-  filter: sepia();
+  filter: var(--img_filt);
 }
-
+button {
+  background-color: var(--brwn);
+  color: var(--lght);
+  padding: 10px;
+  border-radius: 10px;
+}
 .content {
   position: sticky;
   left: 0;
@@ -25,7 +35,7 @@ img {
   display: flex;
   background-color: rgb(139, 132, 115);
   padding: 10%;
-  height: 100vh;
+  height: 50vh;
   left: 0;
   width: 80%;
 }
@@ -52,3 +62,6 @@ section {
   color: rgb(139, 132, 115);
   border-radius: 10px;
 }
+
+
+/* add some clamp width stuff */
