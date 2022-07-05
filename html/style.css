@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500&display=swap');
 :root {
-  --img_filt: sepia();
+  --img_filt: ;
   --brwn: rgb(43, 31, 1);
   --lght: rgb(139, 132, 115);
 }
@@ -18,12 +18,36 @@ img {
   width: 100%;
   filter: var(--img_filt);
 }
-button {
-  background-color: var(--brwn);
-  color: var(--lght);
-  padding: 10px;
-  border-radius: 10px;
-}
+/* Buttons !! */
+  button {
+    padding: 10px;
+    border-radius: 10px;
+    border: 0;
+    font-weight: bold;
+  }
+  button:active {
+    background-color: rgb(202, 194, 175) !important;
+  }
+  .btn-dark {
+    background-color: var(--brwn);
+    color: var(--lght);
+  }
+  .btn-dark:hover {
+    background-color: rgb(75, 56, 8);
+  }
+  .btn-light {
+    background-color: var(--lght);
+    color: var(--brwn);
+  }
+  .btn-light:hover {
+    background-color: rgb(102, 90, 61);
+  }
+  #submit {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+/* Button end !! */
 .content {
   position: sticky;
   left: 0;
@@ -69,6 +93,7 @@ section {
   /* width: 200px; */
   background-color: var(--lght);
   margin-bottom: 10px;
+  border: 0;
 }
 
 /* add some clamp width stuff */
