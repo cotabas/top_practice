@@ -57,11 +57,18 @@ section {
   width: 300px;
 
 }
-#first_info {
+.first_info {
   background-color: rgb(43, 31, 1);
   color: rgb(139, 132, 115);
   border-radius: 10px;
 }
 
+.text_input {
+  border-radius: 10px;
+  height: 20px;
+  /* width: 200px; */
+  background-color: var(--lght);
+  margin-bottom: 10px;
+}
 
 /* add some clamp width stuff */
