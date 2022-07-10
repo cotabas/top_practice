@@ -97,9 +97,11 @@ a:hover {
   color:  rgba(0, 132, 255, 0.5);
 }
 label {
+  color: rgb(167, 165, 165);
   font-size: .7em;
   font-weight: 600;
   padding-top: 20px;
+  
 }
 
 input {
@@ -108,7 +110,7 @@ input {
   border: 1px solid rgb(185, 184, 187);
   border-radius: 5px;
   box-shadow: none;
-  background-color: rgb(244, 245, 252);
+  background-color: rgb(249, 249, 250);
   padding: 5px;
   outline: none;
 }
