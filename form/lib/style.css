@@ -36,6 +36,7 @@ main {
 }
 h1 {
   padding-left: 20px;
+  padding-right: 20px;
   /* align-self: flex-end; */
   color: #fff;
   font-size: 3em;
@@ -57,7 +58,7 @@ h1 {
 }
 article {
   padding-left: 50px;
-  height: 40%;
+  padding-bottom: 30px;
   width: 800px;
   background-color: #fff;
   box-shadow: 2px 1px 5px rgb(126, 121, 121);
@@ -127,10 +128,11 @@ input:focus {
   border: 1px solid rgb(0, 132, 255);
   box-shadow: 2px 1px 5px rgb(126, 121, 121);
 }
-input:invalid {
+input:invalid:focus {
   border: 1px solid rgb(192, 1, 1);
   box-shadow: 2px 1px 5px rgb(214, 0, 0);
 }
+
 #passMatch {
   margin: 0;
   color: rgb(192, 1, 1);

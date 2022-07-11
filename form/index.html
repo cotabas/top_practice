@@ -15,7 +15,7 @@
       <img src="pix/bg-lonely-horse.jpg" alt="A horse in timeout" id="bgHorse">
       <div id="banner">
         <img src="pix/m_logo.svg" alt="M logo" id="mLogo">
-        <h1>mo.dev</h1>
+        <h1>cptmo.dev</h1>
       </div>
     </section>
     <section id="rightSide">
@@ -29,23 +29,23 @@
       </header>
       <article>
         <h2>Let's do this!</h2>
-        <form action="#" id="theForm">
+        <form id="theForm" method="post" novalidate>
           <div id="columnOne" class="formCol">
           <label for="firstName">FIRST NAME</label>
-          <input type="text" name="firstName" id="firstName">
+          <input type="text" name="firstName" id="firstName" required>
           <label for="email">EMAIL</label>
-          <input type="email" name="email" id="email">
+          <input type="email" name="email" id="email" required>
           <label for="pass">PASSWORD  </label>
-          <input type="password" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" name="pass" id="pass">
+          <input type="password" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" name="pass" id="pass" required>
           <p id="passMatch">* Passwords do not match</p>
           </div>
           <div id="columTwo" class="formCol">
           <label for="lastName">LAST NAME</label>
-          <input type="text" name="lastName" id="lastName">          
+          <input type="text" name="lastName" id="lastName" required>          
           <label for="phone">PHONE NUMBER</label>
-          <input type="tel" name="phone" id="phone">
+          <input type="tel" name="phone" id="phone" required>
           <label for="confirmPass">CONFIRM PASSWORD</label>
-          <input type="password" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" name="confirmPass" id="confirmPass">
+          <input type="password" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" name="confirmPass" id="confirmPass" required>
           </div>
         </form>
       </article>
