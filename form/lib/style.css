@@ -127,3 +127,13 @@ input:focus {
   border: 1px solid rgb(0, 132, 255);
   box-shadow: 2px 1px 5px rgb(126, 121, 121);
 }
+input:invalid {
+  border: 1px solid rgb(192, 1, 1);
+  box-shadow: 2px 1px 5px rgb(214, 0, 0);
+}
+#passMatch {
+  margin: 0;
+  color: rgb(192, 1, 1);
+  font-size: .7em;
+  visibility: hidden;
+}
